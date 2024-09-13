@@ -5,6 +5,7 @@ import com.sunny.BizCode.dao.TableDao;
 import com.sunny.BizCode.entity.Flow;
 import com.sunny.BizCode.entity.Table;
 import com.sunny.BizCode.util.FreemarkerUtil;
+import com.sunny.BizCode.util.SqlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,8 @@ public class GeneratorServiceImpl implements GeneratorService {
     private TableDao tableDao;
     @Resource
     private FreemarkerUtil freemarkerUtil;
+    @Resource
+    private SqlUtil sqlUtil;
 
     @Override
     public Integer generator(Flow flow) throws Exception {
@@ -81,11 +84,11 @@ public class GeneratorServiceImpl implements GeneratorService {
                 beforeMap.put("entityColumnNo", "ddateBefore");
                 list.add(beforeMap);
 
-                dynamicCondition=dynamicCondition+" <if test=\"ddateAfter!= null and  ddateAfter!= \'\' \">\n" +
-                        "                and "+entityName+".D_DATE <![CDATA[<=]]>#{ddateAfter}\n" +
+                dynamicCondition = dynamicCondition + " <if test=\"ddateAfter!= null and  ddateAfter!= \'\' \">\n" +
+                        "                and " + entityName + ".D_DATE <![CDATA[<=]]>#{ddateAfter}\n" +
                         "            </if>\n" +
                         "            <if test=\"ddateBefore!= null  and  ddateBefore!= \'\' \">\n" +
-                        "                and "+entityName+".D_DATE <![CDATA[>=]]>#{ddateBefore}\n" +
+                        "                and " + entityName + ".D_DATE <![CDATA[>=]]>#{ddateBefore}\n" +
                         "            </if>";
 
             }
@@ -181,6 +184,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         List<Table> list = tableDao.getList(table);
 
         List<Map<String, String>> columns = new LinkedList<>();
+
         for (Table t : list) {
             Map<String, String> columnMap = new HashMap<>(16);
             // 字段名称
@@ -198,11 +202,67 @@ public class GeneratorServiceImpl implements GeneratorService {
         return columns;
     }
 
-    public Object export(byte[] zip ,String fileName){
+    public Object export(byte[] zip, String fileName) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentDispositionFormData("attachment'", fileName);
         headers.set("Content-Type", "application/zip");
 
         return new ResponseEntity<byte[]>(zip, headers, HttpStatus.OK);
+    }
+
+
+    @Override
+    public Integer getSql(Table table) throws Exception {
+        //表中文名
+        String ctablename = table.getCtablename();
+        //Entity类名
+        String entityName = table.getEntityname();
+        //表名
+        String tableName = table.getCtable();
+        String saveUrl = table.getSaveUrl() == null ? "C:\\Users\\use\\Desktop\\资料" : table.getSaveUrl();
+        table.setCtable(table.getCtable().toUpperCase());
+        List<Table> tablelist = tableDao.getList(table);
+        //查询内容
+        String resultColumns = "select ";
+
+        //新建字段
+        String insertname = "";
+        //新建值
+        String insertvalue = "";
+        String insertsql="insert into "+tableName+" (";
+        String smallname = sqlUtil.Deleteunderline(tableName);
+        for (Table t : tablelist) {
+            String cname = t.getCname();
+            String columnName = sqlUtil.Deleteunderline(t.getCname());
+            if ("DATE".equals(t.getCtype())) {
+                resultColumns = resultColumns + "to_char(" + smallname + "." + cname + ",'yyyy-MM-dd')" + " as c" + columnName + "\n,";
+            } else {
+                resultColumns = resultColumns + smallname + "." + cname + " as " + columnName + "\n,";
+            }
+            insertname = insertname + cname.toUpperCase() + "\n,";
+            insertvalue = insertvalue+"\"" +columnName+"\""+"," ;
+        }
+        insertname = insertname.substring(0, insertname.length() - 1);
+        insertvalue = insertvalue.substring(0, insertvalue.length() - 1);
+        insertsql=  insertsql+insertname+") value ("+insertvalue+")";
+
+        resultColumns = resultColumns.substring(0, resultColumns.length() - 1);
+
+        String sql = resultColumns + " from " + tableName + "  " + smallname;
+
+        sql+=("\n"+insertsql);
+
+        Map<String, Object> root = new HashMap<>();
+
+        root.put("resultColumns", sql);
+        freemarkerUtil.generate(root, "sql.ftl", saveUrl, tableName + ".txt");
+        log.info("生成sql");
+        return 1;
+    }
+
+
+    List<Table> getTableByDs(Table table){
+        List<Table> tablelist = tableDao.getList(table);
+        return  tablelist;
     }
 }

@@ -31,4 +31,14 @@ public class CodeController {
         }
 
     }
+    @PostMapping("/sql")
+    public Object sql(@RequestBody Table table) throws Exception {
+        Integer result = generatorService.getSql(table);
+        if (result == 1) {
+            return "sucess";
+        } else {
+            return "fail";
+        }
+
+    }
 }
