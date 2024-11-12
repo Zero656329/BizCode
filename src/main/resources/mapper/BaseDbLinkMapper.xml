@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunny.fims.mapper.BaseDbLinkMapper">
+    <sql id="resultColumns">
+BaseDbLink.F_ID as fId
+,BaseDbLink.F_FULL_NAME as fFullName
+,BaseDbLink.F_DB_TYPE as fDbType
+,BaseDbLink.F_HOST as fHost
+,BaseDbLink.F_PORT as fPort
+,BaseDbLink.F_USER_NAME as fUserName
+,BaseDbLink.F_PASSWORD as fPassword
+,BaseDbLink.F_SERVICE_NAME as fServiceName
+,BaseDbLink.F_DESCRIPTION as fDescription
+,BaseDbLink.F_DB_SCHEMA as fDbSchema
+,BaseDbLink.F_TABLE_SPACE as fTableSpace
+,BaseDbLink.F_ORACLE_PARAM as fOracleParam
+,BaseDbLink.F_ORACLE_EXTEND as fOracleExtend
+,BaseDbLink.F_SORT_CODE as fSortCode
+,BaseDbLink.F_CREATOR_TIME as fCreatorTime
+,BaseDbLink.F_CREATOR_USER_ID as fCreatorUserId
+,BaseDbLink.F_LAST_MODIFY_TIME as fLastModifyTime
+,BaseDbLink.F_LAST_MODIFY_USER_ID as fLastModifyUserId
+,BaseDbLink.F_DELETE_TIME as fDeleteTime
+,BaseDbLink.F_DELETE_USER_ID as fDeleteUserId
+,BaseDbLink.F_DELETE_MARK as fDeleteMark
+,BaseDbLink.F_TENANT_ID as fTenantId
+
+
+    </sql>
+    <sql id="dynamicCondition">
+        <where>
+            1=1
+            <if test="fId != null and fId != ''"> 
+ and BaseDbLink.F_ID like concat(concat('%',#{fId}),'%')  
+</if>
+<if test="fFullName != null and fFullName != ''"> 
+ and BaseDbLink.F_FULL_NAME like concat(concat('%',#{fFullName}),'%')  
+</if>
+<if test="fDbType != null and fDbType != ''"> 
+ and BaseDbLink.F_DB_TYPE like concat(concat('%',#{fDbType}),'%')  
+</if>
+<if test="fHost != null and fHost != ''"> 
+ and BaseDbLink.F_HOST like concat(concat('%',#{fHost}),'%')  
+</if>
+<if test="fPort!= null"> 
+ and BaseDbLink.F_PORT = #{fPort}  
+</if>
+<if test="fUserName != null and fUserName != ''"> 
+ and BaseDbLink.F_USER_NAME like concat(concat('%',#{fUserName}),'%')  
+</if>
+<if test="fPassword != null and fPassword != ''"> 
+ and BaseDbLink.F_PASSWORD like concat(concat('%',#{fPassword}),'%')  
+</if>
+<if test="fServiceName != null and fServiceName != ''"> 
+ and BaseDbLink.F_SERVICE_NAME like concat(concat('%',#{fServiceName}),'%')  
+</if>
+<if test="fDescription != null and fDescription != ''"> 
+ and BaseDbLink.F_DESCRIPTION like concat(concat('%',#{fDescription}),'%')  
+</if>
+<if test="fDbSchema != null and fDbSchema != ''"> 
+ and BaseDbLink.F_DB_SCHEMA like concat(concat('%',#{fDbSchema}),'%')  
+</if>
+<if test="fTableSpace != null and fTableSpace != ''"> 
+ and BaseDbLink.F_TABLE_SPACE like concat(concat('%',#{fTableSpace}),'%')  
+</if>
+<if test="fOracleParam != null and fOracleParam != ''"> 
+ and BaseDbLink.F_ORACLE_PARAM like concat(concat('%',#{fOracleParam}),'%')  
+</if>
+<if test="fOracleExtend!= null"> 
+ and BaseDbLink.F_ORACLE_EXTEND = #{fOracleExtend}  
+</if>
+<if test="fSortCode!= null"> 
+ and BaseDbLink.F_SORT_CODE = #{fSortCode}  
+</if>
+<if test="fCreatorTime != null and fCreatorTime != ''"> 
+ and BaseDbLink.F_CREATOR_TIME like concat(concat('%',#{fCreatorTime}),'%')  
+</if>
+<if test="fCreatorUserId != null and fCreatorUserId != ''"> 
+ and BaseDbLink.F_CREATOR_USER_ID like concat(concat('%',#{fCreatorUserId}),'%')  
+</if>
+<if test="fLastModifyTime != null and fLastModifyTime != ''"> 
+ and BaseDbLink.F_LAST_MODIFY_TIME like concat(concat('%',#{fLastModifyTime}),'%')  
+</if>
+<if test="fLastModifyUserId != null and fLastModifyUserId != ''"> 
+ and BaseDbLink.F_LAST_MODIFY_USER_ID like concat(concat('%',#{fLastModifyUserId}),'%')  
+</if>
+<if test="fDeleteTime != null and fDeleteTime != ''"> 
+ and BaseDbLink.F_DELETE_TIME like concat(concat('%',#{fDeleteTime}),'%')  
+</if>
+<if test="fDeleteUserId != null and fDeleteUserId != ''"> 
+ and BaseDbLink.F_DELETE_USER_ID like concat(concat('%',#{fDeleteUserId}),'%')  
+</if>
+<if test="fDeleteMark!= null"> 
+ and BaseDbLink.F_DELETE_MARK = #{fDeleteMark}  
+</if>
+<if test="fTenantId != null and fTenantId != ''"> 
+ and BaseDbLink.F_TENANT_ID like concat(concat('%',#{fTenantId}),'%')  
+</if>
+
+        </where>
+    </sql>
+
+    <select id="getObjectById"   parameterType="com.sunny.fims.entity.BaseDbLink"
+            resultType="com.sunny.fims.entity.BaseDbLink">
+        select
+        <include refid="resultColumns"/>
+        from BASE_DB_LINK BaseDbLink where id=#{id}
+    </select>
+
+    <select id="queryList" parameterType="com.sunny.fims.entity.BaseDbLink"
+            resultType="com.sunny.fims.entity.BaseDbLink">
+        select
+        <include refid="resultColumns"/>
+        from BASE_DB_LINK BaseDbLink
+        <include refid="dynamicCondition"/>
+    </select>
+    <select id="selectForPage"   resultType="com.sunny.fims.entity.BaseDbLink">
+        select
+        <include refid="resultColumns"/>
+        from BASE_DB_LINK BaseDbLink
+        <if test="BaseDbLink != null ">
+
+
+            </if>
+
+    </select>
+
+
+    <insert id="insert" parameterType="com.sunny.fims.entity.BaseDbLink">
+        INSERT INTO BASE_DB_LINK (ID,F_ID
+,F_FULL_NAME
+,F_DB_TYPE
+,F_HOST
+,F_PORT
+,F_USER_NAME
+,F_PASSWORD
+,F_SERVICE_NAME
+,F_DESCRIPTION
+,F_DB_SCHEMA
+,F_TABLE_SPACE
+,F_ORACLE_PARAM
+,F_ORACLE_EXTEND
+,F_SORT_CODE
+,F_CREATOR_TIME
+,F_CREATOR_USER_ID
+,F_LAST_MODIFY_TIME
+,F_LAST_MODIFY_USER_ID
+,F_DELETE_TIME
+,F_DELETE_USER_ID
+,F_DELETE_MARK
+,F_TENANT_ID
+) values(BASE_DB_LINK_SEQ.NEXTVAL
+,#{fId,jdbcType=VARCHAR}
+,#{fFullName,jdbcType=VARCHAR}
+,#{fDbType,jdbcType=VARCHAR}
+,#{fHost,jdbcType=VARCHAR}
+,#{fPort,jdbcType=DECIMAL}
+,#{fUserName,jdbcType=VARCHAR}
+,#{fPassword,jdbcType=VARCHAR}
+,#{fServiceName,jdbcType=VARCHAR}
+,#{fDescription,jdbcType=VARCHAR}
+,#{fDbSchema,jdbcType=VARCHAR}
+,#{fTableSpace,jdbcType=VARCHAR}
+,#{fOracleParam,jdbcType=VARCHAR}
+,#{fOracleExtend,jdbcType=DECIMAL}
+,#{fSortCode,jdbcType=DECIMAL}
+,#{fCreatorTime,jdbcType=VARCHAR}
+,#{fCreatorUserId,jdbcType=VARCHAR}
+,#{fLastModifyTime,jdbcType=VARCHAR}
+,#{fLastModifyUserId,jdbcType=VARCHAR}
+,#{fDeleteTime,jdbcType=VARCHAR}
+,#{fDeleteUserId,jdbcType=VARCHAR}
+,#{fDeleteMark,jdbcType=DECIMAL}
+,#{fTenantId,jdbcType=VARCHAR}
+)
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sunny.fims.entity.BaseDbLink">
+        update BASE_DB_LINK
+        <set>
+
+             <if test="fId != null and fId != ''">
+F_ID = #{fId},
+</if>
+ <if test="fFullName != null and fFullName != ''">
+F_FULL_NAME = #{fFullName},
+</if>
+ <if test="fDbType != null and fDbType != ''">
+F_DB_TYPE = #{fDbType},
+</if>
+ <if test="fHost != null and fHost != ''">
+F_HOST = #{fHost},
+</if>
+ <if test="fPort != null ">
+F_PORT = #{fPort},
+</if>
+ <if test="fUserName != null and fUserName != ''">
+F_USER_NAME = #{fUserName},
+</if>
+ <if test="fPassword != null and fPassword != ''">
+F_PASSWORD = #{fPassword},
+</if>
+ <if test="fServiceName != null and fServiceName != ''">
+F_SERVICE_NAME = #{fServiceName},
+</if>
+ <if test="fDescription != null and fDescription != ''">
+F_DESCRIPTION = #{fDescription},
+</if>
+ <if test="fDbSchema != null and fDbSchema != ''">
+F_DB_SCHEMA = #{fDbSchema},
+</if>
+ <if test="fTableSpace != null and fTableSpace != ''">
+F_TABLE_SPACE = #{fTableSpace},
+</if>
+ <if test="fOracleParam != null and fOracleParam != ''">
+F_ORACLE_PARAM = #{fOracleParam},
+</if>
+ <if test="fOracleExtend != null ">
+F_ORACLE_EXTEND = #{fOracleExtend},
+</if>
+ <if test="fSortCode != null ">
+F_SORT_CODE = #{fSortCode},
+</if>
+ <if test="fCreatorTime != null and fCreatorTime != ''">
+F_CREATOR_TIME = #{fCreatorTime},
+</if>
+ <if test="fCreatorUserId != null and fCreatorUserId != ''">
+F_CREATOR_USER_ID = #{fCreatorUserId},
+</if>
+ <if test="fLastModifyTime != null and fLastModifyTime != ''">
+F_LAST_MODIFY_TIME = #{fLastModifyTime},
+</if>
+ <if test="fLastModifyUserId != null and fLastModifyUserId != ''">
+F_LAST_MODIFY_USER_ID = #{fLastModifyUserId},
+</if>
+ <if test="fDeleteTime != null and fDeleteTime != ''">
+F_DELETE_TIME = #{fDeleteTime},
+</if>
+ <if test="fDeleteUserId != null and fDeleteUserId != ''">
+F_DELETE_USER_ID = #{fDeleteUserId},
+</if>
+ <if test="fDeleteMark != null ">
+F_DELETE_MARK = #{fDeleteMark},
+</if>
+ <if test="fTenantId != null and fTenantId != ''">
+F_TENANT_ID = #{fTenantId},
+</if>
+
+            version=version+1
+            </set>
+        where
+        id =  #{id} and version= #{version}
+    </update>
+
+
+    <delete id="deleteByIds">
+        delete
+        from
+        BASE_DB_LINK
+        where
+        id in
+        <foreach collection="idList" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="count" parameterType="com.sunny.fims.entity.BaseDbLink" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        from BASE_DB_LINK BaseDbLink
+        <include refid="dynamicCondition"/>
+    </select>
+</mapper>
+
